@@ -324,7 +324,10 @@ For comprehensive guidance on how to use the `POROPTO` package, follow the comma
     ```python
     optimal_solution_analyzer(
         optimal_solution_df,
-        model_type='define the model type'
+        model_type='define the model type',
+        returns_data,
+        min_operator_values=min_operator_values,
+        max_operator_values=max_operator_values
     )
     ```
 
@@ -332,6 +335,8 @@ For comprehensive guidance on how to use the `POROPTO` package, follow the comma
 
     ```python
     uniform_buy_and_hold_analyzer(
+        sustainability_scores_data,
+        returns_data,
         min_operator_values=min_operator_values,
         max_operator_values=max_operator_values.
         model_type='define the model type'
@@ -407,7 +412,11 @@ def run_process(gamma):
     
     result = optimal_solution_analyzer(
     optimal_solution_df,
-    model_type='define the model type'
+    model_type='define the model type',
+    sustainability_scores_data,
+    returns_data,
+    min_operator_values,
+    max_operator_values
     )
             
     # Calculate runtime
