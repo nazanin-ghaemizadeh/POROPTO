@@ -207,7 +207,7 @@ For comprehensive guidance on how to use the `POROPTO` package, follow the comma
     )
     ```
 
-12. Analyze the uniform buy and hold strategy:
+12. Analyze the uniform buy-and-hold strategy:
 
     ```python
     uniform_buy_and_hold_analyzer(
@@ -215,8 +215,100 @@ For comprehensive guidance on how to use the `POROPTO` package, follow the comma
         max_operator_values=max_operator_values.
         model_type='define the model type'
     )
+    ```
+    
+## Running Portfolio Optimization for Multiple Gamma Values
+This section demonstrates how to execute the portfolio optimization process over a range of sustainability trade-off parameters (gamma). The example below iterates through predefined gamma values, computes optimal portfolio allocations, and reports runtime performance.
 
-## Examples
+```python
+# Set pandas display options
+pd.set_option('display.width', 1000)  # Increase terminal width for display
+pd.set_option('display.max_columns', None)  # Show all columns
+pd.set_option('display.expand_frame_repr', False)  # Prevent DataFrame from being wrapped
+    
+# Function to run the process for a given gamma value
+def run_process(gamma):
+    start_time = time.time()
+            
+    # Run the process
+    aggregated_decision_matrix = aggregate_decision_matrices(
+    file_path='the file path of the decision-makers',
+    experts_importance=experts_importance
+    )
+    
+    sustainability_dimensions = {
+    'social': 'number of social criteria',
+    'environmental': 'number of environmental criteria',
+    'economic': 'number of economic criteria'
+    }
+    
+    extracted_decision_matrix = extract_decision_matrix(
+    aggregated_decision_matrix,
+    sustainability_dimensions,
+    investment_mode='define investment mode'
+    )
+    
+    criteria_weights = shannon_entropy(
+    extracted_decision_matrix
+    )
+    
+    sustainability_scores_data = sustainability_scores(
+    extracted_decision_matrix,
+    criteria_weights
+    )
+    
+    returns_data = read_returns_data(
+    file_path='the file path of the return\'s data'
+    )
+    
+    min_operator_values = min_operator(
+    sustainability_scores_data,
+    returns_data,
+    selected_assets='a tuple including the lower and upper investment bounds',
+    gamma='define the sustainability interval value'
+    )
+    
+    max_operator_values = max_operator(
+    sustainability_scores_data,
+    returns_data,
+    selected_assets='a tuple including the lower and upper investment bounds',
+    gamma='define the sustainability interval value'
+    )
+    
+    optimal_solution_df = mean_variance_entropy_model(
+    sustainability_scores_data,
+    returns_data,
+    selected_assets='a tuple including the lower and upper investment bounds',
+    gamma='define the sustainability interval value',
+    min_operator_values,
+    max_operator_values
+    )
+    
+    result = optimal_solution_analyzer(
+    optimal_solution_df,
+    model_type='define the model type'
+    )
+            
+    # Calculate runtime
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+            
+    # Return results and runtime
+    return result, elapsed_time
+    
+# List of gamma values to test
+gamma_values = [0, 0.2, 0.4, 0.6, 0.8, 1]
+    
+# Run the process for each gamma value
+for gamma in gamma_values:
+    result, runtime = run_process(gamma)
+    print(f"Gamma = {gamma}: Runtime = {runtime:.2f} seconds")
+    print("Optimal Solution DataFrame:")
+    print(result)
+    print("-" * 150)
+```
+
+## Preliminaries Examples
 
 ### Example 1: Satisfaction Degree
 
