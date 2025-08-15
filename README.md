@@ -1,6 +1,6 @@
 # POROPTO
 
-# Portfolio Optimization Package (PROPTO)
+# Portfolio Optimization Package
 
 ## Overview
 
