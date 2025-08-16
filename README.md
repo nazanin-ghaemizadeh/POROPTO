@@ -13,8 +13,7 @@ Traditional models often ignore sustainability and uncertainty in financial deci
 * Uses **Shannon entropy** to represent uncertainty
 * Incorporates **social, environmental, and economic (SEE)** sustainability factors
 * Applies **IIFLP** for iterative fuzzy optimization
-* Benchmarks performance against a **Buy-and-Hold** strategy
-
+* 
 A real-world case study using **Tehran Stock Exchange (TSE)** data validates the model.
 
 ---
@@ -64,14 +63,12 @@ All objectives are modeled with **membership and non-membership functions** in a
 3. TIFS modeling of sustainability and returns
 4. IF objective formulation: return, risk, sustainability, entropy
 5. Apply constraints:
-
    * Capital budget
    * Cardinality
    * Flexible bounds
    * No short-selling
 6. Solve using Pyomo (IIFLP)
 7. Perform scenario and sensitivity analysis (γ ∈ \[0,1])
-8. Benchmark against Buy-and-Hold
 
 <img width="3000" height="2970" alt="integrated_framework png" src="https://github.com/user-attachments/assets/0a6e107b-803d-48dc-8be3-b5f8f22a266a" />
 
@@ -193,8 +190,6 @@ Functions for optimizing portfolios using Pyomo and visualizing results.
 - `min_operator(sustainability_scores_data, returns_data, selected_assets, gamma)`: Optimizes investment dimensions for multiple objectives and extracts results.
 - `max_operator(sustainability_scores_data, returns_data, selected_assets, gamma)`: Similar to `min_operator`, but focuses on maximizing objectives.
 - `mean_variance_entropy_model(sustainability_scores_data, returns_data, selected_assets, gamma, min_operator_values, max_operator_values)`: Optimizes based on mean, variance, and entropy.
-- `optimal_solution_analyzer(optimal_solution_df, model_type)`: Analyzes optimal solutions and calculates objective values.
-- `uniform_buy_and_hold_analyzer(min_operator_values, max_operator_values, model_type)`: Analyzes the portfolio using a Uniform Buy and Hold Strategy.
 
 ## Installation
 
@@ -222,7 +217,7 @@ Functions for optimizing portfolios using Pyomo and visualizing results.
     ```
 
 ## Usage Instructions
-For comprehensive guidance on how to use the `POROPTO` package, follow the commands below and please refer to the individual function documentation within each module.
+For comprehensive guidance on how to use the `POROPTO` package, follow the commands below, and please refer to the individual function documentation within each module.
 
 1. Define the linguistic importance of the decision-makers:
 
@@ -319,30 +314,6 @@ For comprehensive guidance on how to use the `POROPTO` package, follow the comma
     )
     ```
 
-11. Analyze the optimal solution results:
-
-    ```python
-    optimal_solution_analyzer(
-        optimal_solution_df,
-        model_type='define the model type',
-        returns_data,
-        min_operator_values=min_operator_values,
-        max_operator_values=max_operator_values
-    )
-    ```
-
-12. Analyze the uniform buy-and-hold strategy:
-
-    ```python
-    uniform_buy_and_hold_analyzer(
-        sustainability_scores_data,
-        returns_data,
-        min_operator_values=min_operator_values,
-        max_operator_values=max_operator_values.
-        model_type='define the model type'
-    )
-    ```
-    
 ## Running Portfolio Optimization for Multiple Gamma Values
 This section demonstrates how to execute the portfolio optimization process over a range of sustainability trade-off parameters (gamma). The example below iterates through predefined gamma values, computes optimal portfolio allocations, and reports runtime performance.
 
@@ -401,20 +372,11 @@ def run_process(gamma):
     gamma='define the sustainability interval value'
     )
     
-    optimal_solution_df = mean_variance_entropy_model(
+    result = mean_variance_entropy_model(
     sustainability_scores_data,
     returns_data,
     selected_assets='a tuple including the lower and upper investment bounds',
     gamma='define the sustainability interval value',
-    min_operator_values,
-    max_operator_values
-    )
-    
-    result = optimal_solution_analyzer(
-    optimal_solution_df,
-    model_type='define the model type',
-    sustainability_scores_data,
-    returns_data,
     min_operator_values,
     max_operator_values
     )
