@@ -13,7 +13,7 @@ Traditional models often ignore sustainability and uncertainty in financial deci
 * Uses **Shannon entropy** to represent uncertainty
 * Incorporates **social, environmental, and economic (SEE)** sustainability factors
 * Applies **IIFLP** for iterative fuzzy optimization
-* 
+
 A real-world case study using **Tehran Stock Exchange (TSE)** data validates the model.
 
 ---
