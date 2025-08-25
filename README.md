@@ -118,11 +118,35 @@ Includes tools for TIFS operations, sustainability assessment, fuzzy aggregation
 
 # 📦 POROPTO – Portfolio Optimization Package
 
+[![PyPI version](https://badge.fury.io/py/poropto.svg)](https://pypi.org/project/poropto/)
+[![Downloads](https://pepy.tech/badge/poropto)](https://pepy.tech/project/poropto)
+
 ---
 
 ## Overview
 
-The **PROPTO** package is designed for optimizing investment portfolios within a trapezoidal intuitionistic fuzzy framework. This package provides tools to determine optimal investment proportions in risky assets, considering multiple objectives and constraints.
+The **POROPTO** package provides tools for **sustainable multi-objective portfolio optimization** under a trapezoidal intuitionistic fuzzy framework.  
+It allows determining optimal investment proportions in risky assets while accounting for **sustainability, return, risk, and entropy**.
+
+---
+
+## Installation
+
+Install directly from PyPI:
+
+```bash
+pip install poropto
+```
+
+This will automatically install the required dependencies: `numpy`, `pandas`, `scipy`, `matplotlib`, and `pyomo`.
+
+> 🔹 Optional: If you also want to use AMPL solvers, install:
+```bash
+pip install amplpy
+python -m amplpy.modules install coin
+```
+
+---
 
 ## Package Contents
 
@@ -162,6 +186,8 @@ Functions for manipulating trapezoidal intuitionistic fuzzy numbers (TIFNs).
 - `membership_entropy(A)`: Computes the entropy of the membership function for a TIFN.
 - `nonmembership_entropy(A)`: Computes the entropy of the non-membership function for a TIFN.
 
+---
+
 ### 2. sustainability_evaluation
 Functions for aggregating and evaluating sustainability decision matrices.
 
@@ -174,6 +200,8 @@ Functions for aggregating and evaluating sustainability decision matrices.
 - `sustainability_scores(extracted_decision_matrix, criteria_weights)`: Computes sustainability scores for each alternative.
 - `sustainability_scores_mean(sustainability_scores_data)`: Computes the mean of sustainability scores.
 
+---
+
 ### 3. return_evaluation
 Tools for evaluating financial returns.
 
@@ -184,221 +212,89 @@ Tools for evaluating financial returns.
 - `returns_covariance(returns_data)`: Computes the covariance matrix of returns.
 - `returns_entropy(returns_data)`: Computes the entropy of returns.
 
+---
+
 ### 4. portfolio_optimization
 Functions for optimizing portfolios using Pyomo and visualizing results.
 
 - `min_operator(sustainability_scores_data, returns_data, selected_assets, gamma)`: Optimizes investment dimensions for multiple objectives and extracts results.
 - `max_operator(sustainability_scores_data, returns_data, selected_assets, gamma)`: Similar to `min_operator`, but focuses on maximizing objectives.
 - `mean_variance_entropy_model(sustainability_scores_data, returns_data, selected_assets, gamma, min_operator_values, max_operator_values)`: Optimizes based on mean, variance, and entropy.
-
-## Installation
-
-1. Install required packages:
-
-    ```bash
-    pip install numpy pandas scipy matplotlib pyomo amplpy --upgrade
-    python -m amplpy.modules install coin
-    ```
-
-2. Import necessary libraries:
-
-    ```python
-    import math
-    import scipy.integrate as integrate
-    import os
-    import warnings
-    import logging
-    import ast
-    import numpy as np
-    import pandas as pd
-    import pyomo.environ as pyo
-    import matplotlib.pyplot as plt
-    from pyomo.opt import SolverFactory
-    ```
+---
 
 ## Usage Instructions
-For comprehensive guidance on how to use the `POROPTO` package, follow the commands below, and please refer to the individual function documentation within each module.
-
-1. Define the linguistic importance of the decision-makers:
-
-    ```python
-    experts_importance = ('a tuple including the linguistic importance of the decision-makers')
-    ```
-
-2. Specify the number of criteria for each sustainability dimension:
-
-    ```python
-    sustainability_dimensions = {
-        'social': 'number of social criteria', 
-        'environmental': 'number of environmental criteria', 
-        'economic': 'number of economic criteria'
-    }
-    ```
-
-3. Aggregate decision matrices from a file:
-
-    ```python
-    aggregated_decision_matrix = aggregate_decision_matrices(
-        file_path='the file path of the decision-makers', 
-        experts_importance=experts_importance
-    )
-    ```
-
-4. Extract and adjust the decision matrix:
-
-    ```python
-    extracted_decision_matrix = extract_decision_matrix(
-        aggregated_decision_matrix, 
-        sustainability_dimensions=sustainability_dimensions, 
-        investment_mode='define investment mode'
-    )
-    ```
-
-5. Calculate criteria weights using Shannon entropy:
-
-    ```python
-    criteria_weights = shannon_entropy(
-        extracted_decision_matrix
-    )
-    ```
-
-6. Compute sustainability scores for each alternative:
-
-    ```python
-    sustainability_scores_data = sustainability_scores(
-        extracted_decision_matrix,
-        criteria_weights
-    )
-    ```
-
-7. Read return data from a file:
-
-    ```python
-    returns_data = read_returns_data(
-        file_path='the file path of the return\'s data'
-    )
-    ```
-
-8. Optimize using the minimum operator:
-
-    ```python
-    min_operator_values = min_operator(
-        sustainability_scores_data, 
-        returns_data, 
-        selected_assets='a tuple including the lower and upper investment bounds', 
-        gamma='define the sustainability interval value'
-    )
-    ```
-
-9. Optimize using the maximum operator:
-
-    ```python
-    max_operator_values = max_operator(
-        sustainability_scores_data, 
-        returns_data, 
-        selected_assets='a tuple including the lower and upper investment bounds', 
-        gamma='define the sustainability interval value'
-    )
-    ```
-
-10. Analyze the optimal solution using the mean-variance-entropy model:
-
-    ```python
-    optimal_solution_df = mean_variance_entropy_model(
-        sustainability_scores_data,
-        returns_data, 
-        selected_assets='a tuple including the lower and upper investment bounds', 
-        gamma='define the sustainability interval value',
-        min_operator_values=min_operator_values,
-        max_operator_values=max_operator_values
-    )
-    ```
-
-## Running Portfolio Optimization for Multiple Gamma Values
-This section demonstrates how to execute the portfolio optimization process over a range of sustainability trade-off parameters (gamma). The example below iterates through predefined gamma values, computes optimal portfolio allocations, and reports runtime performance.
 
 ```python
-# Set pandas display options
-pd.set_option('display.width', 1000)  # Increase terminal width for display
-pd.set_option('display.max_columns', None)  # Show all columns
-pd.set_option('display.expand_frame_repr', False)  # Prevent DataFrame from being wrapped
-    
-# Function to run the process for a given gamma value
-def run_process(gamma):
-    start_time = time.time()
-            
-    # Run the process
-    aggregated_decision_matrix = aggregate_decision_matrices(
-    file_path='the file path of the decision-makers',
-    experts_importance=experts_importance
-    )
-    
-    sustainability_dimensions = {
-    'social': 'number of social criteria',
-    'environmental': 'number of environmental criteria',
+experts_importance = ('a tuple including the linguistic importance of the decision-makers')
+
+sustainability_dimensions = {
+    'social': 'number of social criteria', 
+    'environmental': 'number of environmental criteria', 
     'economic': 'number of economic criteria'
-    }
-    
-    extracted_decision_matrix = extract_decision_matrix(
-    aggregated_decision_matrix,
-    sustainability_dimensions,
+}
+
+aggregated_decision_matrix = aggregate_decision_matrices(
+    file_path='the file path of the decision-makers', 
+    experts_importance=experts_importance
+)
+
+extracted_decision_matrix = extract_decision_matrix(
+    aggregated_decision_matrix, 
+    sustainability_dimensions=sustainability_dimensions, 
     investment_mode='define investment mode'
-    )
-    
-    criteria_weights = shannon_entropy(
-    extracted_decision_matrix
-    )
-    
-    sustainability_scores_data = sustainability_scores(
+)
+
+criteria_weights = shannon_entropy(extracted_decision_matrix)
+
+sustainability_scores_data = sustainability_scores(
     extracted_decision_matrix,
     criteria_weights
-    )
-    
-    returns_data = read_returns_data(
+)
+
+returns_data = read_returns_data(
     file_path='the file path of the return\'s data'
-    )
-    
-    min_operator_values = min_operator(
+)
+
+min_operator_values = min_operator(
+    sustainability_scores_data, 
+    returns_data, 
+    selected_assets='bounds', 
+    gamma='sustainability interval'
+)
+
+max_operator_values = max_operator(
+    sustainability_scores_data, 
+    returns_data, 
+    selected_assets='bounds', 
+    gamma='sustainability interval'
+)
+
+optimal_solution_df = mean_variance_entropy_model(
     sustainability_scores_data,
-    returns_data,
-    selected_assets='a tuple including the lower and upper investment bounds',
-    gamma='define the sustainability interval value'
-    )
-    
-    max_operator_values = max_operator(
-    sustainability_scores_data,
-    returns_data,
-    selected_assets='a tuple including the lower and upper investment bounds',
-    gamma='define the sustainability interval value'
-    )
-    
-    result = mean_variance_entropy_model(
-    sustainability_scores_data,
-    returns_data,
-    selected_assets='a tuple including the lower and upper investment bounds',
-    gamma='define the sustainability interval value',
-    min_operator_values,
-    max_operator_values
-    )
-            
-    # Calculate runtime
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-            
-    # Return results and runtime
-    return result, elapsed_time
-    
-# List of gamma values to test
+    returns_data, 
+    selected_assets='bounds', 
+    gamma='value',
+    min_operator_values=min_operator_values,
+    max_operator_values=max_operator_values
+)
+```
+
+---
+
+## Running Optimization for Multiple Gamma Values
+
+```python
 gamma_values = [0, 0.2, 0.4, 0.6, 0.8, 1]
-    
-# Run the process for each gamma value
+
 for gamma in gamma_values:
     result, runtime = run_process(gamma)
     print(f"Gamma = {gamma}: Runtime = {runtime:.2f} seconds")
-    print("Optimal Solution DataFrame:")
     print(result)
-    print("-" * 150)
+    print("-" * 80)
 ```
+---
+
+
 
 ## Preliminaries Examples
 
