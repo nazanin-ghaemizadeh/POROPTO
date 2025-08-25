@@ -139,11 +139,13 @@ pip install poropto
 
 This will automatically install the required dependencies: `numpy`, `pandas`, `scipy`, `matplotlib`, and `pyomo`.
 
-> 🔹 Optional: If you also want to use AMPL solvers, install:
+> 🔹 POROPTO relies on AMPL and the Bonmin solver (COIN-OR) to run portfolio optimization.
 ```bash
 pip install amplpy
 python -m amplpy.modules install coin
 ```
+
+This will download and set up COIN-OR solvers, including Bonmin. Ensure the solver Bonmin is available before running optimization models.
 
 ---
 
