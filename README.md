@@ -119,7 +119,6 @@ Includes tools for TIFS operations, sustainability assessment, fuzzy aggregation
 # 📦 POROPTO – Portfolio Optimization Package
 
 [![PyPI version](https://badge.fury.io/py/poropto.svg)](https://pypi.org/project/poropto/)
-[![Downloads](https://pepy.tech/badge/poropto)](https://pepy.tech/project/poropto)
 
 ---
 
